@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Website</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 6;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #fbf709;
+        --secondary: #6c63ff;
+        --accent: #ff6b6b;
+        --background: #f8f9fa;
+        --text: #2d3436;
+        --light-text: #636e72;
+        --white: #ffffff;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        line-height: 1.6;
+        color: var(--text);
+        background: var(--background);
+        overflow-x: hidden;
+      }
+
+      /* Navigation */
+      .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: var(--white);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        z-index: 1000;
+        padding: 0.5rem 0;
+      }
+
+      .nav-container {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    padding: 1rem 1rem;
+    margin: -15px auto;
+    flex-direction: column;
+}
+
+      .nav-container h1 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-left: -74px;      }
+
+      .nav-links {
+        display: flex;
+        gap: 3rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 500;
+        position: relative;
+        padding: 0.5rem 0;
+        transition: color 0.3s ease;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--primary);
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      #menu-toggle {
+        display: none;
+      }
+
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+        padding: 0.5rem;  
+        margin-left: -69px;
+      }
+
+      .hamburger div {
+        width: 30px;
+        height: 2px;
+        flex-direction: column;
+        background: var(--primary);
+        transition: 0.3s;
+        border-radius: 2px;
+      }
+
+      /* Sections */
+      section {
+    min-height: 10px;
+    padding: 10rem 0rem 4rem;
+    position: relative;
+
+      }
+
+      .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4rem;
+        align-items: center;
+      }
+
+      .content-text {
+        padding: 2rem;
+      }
+
+      .content-text h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .content-text p {
+        color: var(--light-text);
+        font-size: 1.1rem;
+        line-height: 1.8;
+      }
+
+      .image-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .image-container:hover {
+        transform: translateY(-10px);
+      }
+
+      .image-container img {
+        width: 100%;
+        height: auto;
+        transition: transform 0.3s ease;
+      }
+
+      .image-container:hover img {
+        transform: scale(1.05);
+      }
+
+      /* Footer */
+      footer {
+        /* background: linear-gradient(135deg, var(--primary), var(--secondary)); */
+        color: var(--white);
+        padding: 6rem 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .contact-form {
+        max-width: 600px;
+        margin: 0 auto;
+        background: var(--white);
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .contact-form h2 {
+        color: var(--text);
+        margin-bottom: 2rem;
+        text-align: center;
+        font-size: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        transition: all 0.3s ease;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+      }
+
+      button {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        color: var(--white);
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        /* Navigation */
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: var(--white);
+          flex-direction: column;
+          padding: 1rem;
+          gap: 1rem;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        #menu-toggle:checked ~ .nav-links {
+          display: flex;
+        }
+
+        .hamburger {
+          display: flex;
+        }
+
+        .content-container {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+          padding: 1rem;
+        }
+
+        .content-text {
+          padding: 1rem;
+          text-align: center;
+        }
+
+        .content-text h2 {
+          font-size: 2rem;
+        }
+
+        /* Contact form */
+        .contact-form {
+          padding: 0rem;
+          margin: -2rem;
+        }
+
+        /* Images inside sections */
+        .image-container img {
+          width: 100%;
+          height: auto;
+          object-fit: cover;
+        }
+
+        /* Adjust footer */
+        footer {
+          padding: 4rem 2rem;
+          /* color: #d99a2c; */
+        }
+      }
+
+      /* Animations */
+
+      @keyframes fadeInFromBelow {
+        from {
+          opacity: 0;
+          transform: translateY(20px); /* Start slightly below */
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0); /* End at normal position */
+        }
+      }
+
+      /* Keyframe animation for second section (fade in from the left) */
+      @keyframes fadeInFromLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-20px); /* Start slightly left */
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0); /* End at normal position */
+        }
+      }
+
+      /* Keyframe animation for third section (fade in from the right) */
+      @keyframes fadeInFromRight {
+        from {
+          opacity: 0;
+          transform: translateX(20px); /* Start slightly right */
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0); /* End at normal position */
+        }
+      }
+
+      /* Apply the specific animation to the targeted section */
+      section:target {
+        animation: fadeInFromBelow 0.8s ease-out forwards; /* Default to first section animation */
+      }
+
+      /* First Section (targeted) */
+      #first-section:target {
+        animation: fadeInFromBelow 0.8s ease-out forwards;
+      }
+
+      /* Second Section (targeted) */
+      #second-section:target {
+        animation: fadeInFromLeft 0.8s ease-out forwards;
+      }
+
+      /* Third Section (targeted) */
+      #third-section:target {
+        animation: fadeInFromRight 0.8s ease-out forwards;
+      }
+
+      /* Optional smooth transition for all sections */
+      section {
+        transition: all 0.3s ease;
+      }
+
+      /* Media Query for Smaller Screens */
+      @media (max-width: 768px) {
+        /* Disable animation for navbar in smaller screens */
+        .navbar {
+          position: fixed;
+          top: 0;
+          width: 100%;
+          background: var(--white);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+          z-index: 1000;
+          padding: 0.5rem 0;
+          animation: none; /* Disable animation on navbar */
+        }
+      }
+
+    /* quiz */
+    .quiz-container {
+    max-width: 1384px;
+    margin: 6px auto;
+    padding: -2rem;
+    width: 80%;
+}
+
+.quiz-container1 {
+    max-width: 1384px;
+    margin: 6px auto;
+    padding: -2rem;
+    width: 80%;
+}
+
+    /* Adjust the width for larger screens */
+    @media (min-width: 768px) {
+      .quiz-container {
+        width: 5%;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .quiz-container1 {
+        width: 5%;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .quiz-container {
+        width: 100%;
+      }
+    }
+    @media (min-width: 1024px) {
+      .quiz-container1 {
+        width: 100%;
+      }
+    }
+    
+    .quiz {
+      display: none;
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+    
+    /* Show first quiz by default */
+    #quiz1:not(:checked) ~ .quiz-1 {
+      display: block;
+    }
+    
+    /* Show subsequent quizzes only when previous answer is correct */
+    #quiz1-correct:checked ~ .quiz-2,
+    #quiz2-correct:checked ~ .quiz-3,
+    #quiz3-correct:checked ~ .quiz-4,
+    #quiz4-correct:checked ~ .quiz-5 {
+      display: block;
+    }
+    
+    /* Show completion message when all answers are correct */
+    #quiz5-correct:checked ~ #quiz-complete {
+      display: block;
+    }
+    
+    .quiz h3 {
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+    
+    .options {
+      display: grid;
+      gap: 1rem;
+    }
+    
+    /* Hide radio buttons but keep them accessible */
+    .option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+    }
+    
+    .option label {
+      display: block;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .option label:hover {
+      background: #f5f5f5;
+      border-color: var(--primary);
+    }
+    
+    /* Styling for correct/incorrect answers */
+    .option input[type="radio"]:checked + label {
+      border-width: 2px;
+    }
+    
+    .option input[type="radio"].correct:checked + label {
+      background: #4CAF50;
+      color: white;
+      border-color: #4CAF50;
+    }
+    
+    .option input[type="radio"].incorrect:checked + label {
+      background: #FF5252;
+      color: white;
+      border-color: #FF5252;
+    }
+    
+    /* Feedback messages */
+    .feedback {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      display: none;
+    }
+    
+    .option input[type="radio"].correct:checked ~ .feedback-correct {
+      display: block;
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+    
+    .option input[type="radio"].incorrect:checked ~ .feedback-incorrect {
+      display: block;
+      background: #FFEBEE;
+      color: #C62828;
+    }
+    
+    #quiz-complete {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      /* background: linear-gradient(45deg, var(--primary), var(--secondary)); */
+      color: white;
+      border-radius: 15px;
+      margin-top: 2rem;
+    }
+    
+    /* Animation for transitions */
+    .quiz {
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    
+    }
+
+    /* Explaination */
+
+
+
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <h1>QuizMaster</h1>
+        <input type="checkbox" id="menu-toggle" />
+        <label for="menu-toggle" class="hamburger">
+          <div></div>
+          <div></div>
+          <div></div>
+        </label>
+        <div class="nav-links">
+          <a href="#first-section">Home</a>
+          <a href="#second-section">About</a>
+          <a href="#third-section">Features</a>
+          <a href="#quiz-section">Quizes</a>
+          <a href="#footer">Contact</a>
+        </div>
+      </div>
+    </nav>
+
+    <section id="first-section" class="parallax">
+      <div class="content-container">
+        
+        <div class="content-text">
+          <h2>Welcome to QuizMaster</h2>
+          <p>
+            Embark on a journey of knowledge and discovery through our
+            interactive learning platform. Challenge yourself with engaging
+            quizzes designed to expand your horizons.
+          </p>
+        </div>
+        <div class="image-container">
+          <img
+            src="https://image.freepik.com/free-vector/frontend-development-web-banner-concept-website-interface-improvement-illustration_277904-4428.jpg"
+            alt="Learning Platform"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section id="second-section">
+      <div class="content-container">
+        <div class="image-container">
+          <img
+            src="https://image.freepik.com/free-vector/frontend-development-web-banner-concept-website-interface-improvement-illustration_277904-4428.jpg"
+            alt="About Platform"
+          />
+        </div>
+        <div class="content-text">
+          <h2>Learn & Grow</h2>
+          <p>
+            Our carefully curated quizzes and comprehensive knowledge base are
+            perfect for students and lifelong learners. Experience education
+            reimagined for the digital age.
+          </p>
+        </div>
+      </div>
+    </section>
+
+     
+    
+
+    <section id="third-section" class="parallax">
+      <div class="content-container">
+        <div class="content-text">
+          <h2>Key Features</h2>
+          <p>
+            Discover a world of features designed to enhance your learning
+            journey. From adaptive quizzes to detailed analytics, we've got
+            everything you need to succeed.
+          </p>
+        </div>
+        <div class="image-container">
+          <img
+            src="https://image.freepik.com/free-vector/frontend-development-web-banner-concept-website-interface-improvement-illustration_277904-4428.jpg"
+            alt="Features"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz-section" class="quiz-container">
+    <div class="content-container">
+      <div class="content-text">
+        <h2>Test Your HTML & CSS Knowledge</h2>
+        
+        <!-- Hidden control checkboxes -->
+        <input type="checkbox" id="quiz1" hidden>
+        <input type="checkbox" id="quiz1-correct" hidden>
+        <input type="checkbox" id="quiz2-correct" hidden>
+        <input type="checkbox" id="quiz3-correct" hidden>
+        <input type="checkbox" id="quiz4-correct" hidden>
+        <input type="checkbox" id="quiz5-correct" hidden>
+        
+        <!-- Quiz 1 -->
+        <div class="quiz quiz-1">
+          <h3>Question 1: What does HTML stand for?</h3>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="q1-1" name="quiz1" class="correct" onchange="this.checked && (document.getElementById('quiz1-correct').checked = true)">
+              <label for="q1-1">HyperText Markup Language</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q1-2" name="quiz1" class="incorrect">
+              <label for="q1-2">HighText Machine Language</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q1-3" name="quiz1" class="incorrect">
+              <label for="q1-3">HyperText Machine Language</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q1-4" name="quiz1" class="incorrect">
+              <label for="q1-4">HighText Markup Language</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quiz 2 -->
+        <div class="quiz quiz-2">
+          <h3>Question 2: Which CSS property is used to change the text color?</h3>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="q2-1" name="quiz2" class="incorrect">
+              <label for="q2-1">text-style</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q2-2" name="quiz2" class="correct" onchange="this.checked && (document.getElementById('quiz2-correct').checked = true)">
+              <label for="q2-2">color</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q2-3" name="quiz2" class="incorrect">
+              <label for="q2-3">font-color</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q2-4" name="quiz2" class="incorrect">
+              <label for="q2-4">text-color</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quiz 3 -->
+        <div class="quiz quiz-3">
+          <h3>Question 3: Which HTML tag is used to create a hyperlink?</h3>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="q3-1" name="quiz3" class="incorrect">
+              <label for="q3-1">link</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q3-2" name="quiz3" class="incorrect">
+              <label for="q3-2">href</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q3-3" name="quiz3" class="correct" onchange="this.checked && (document.getElementById('quiz3-correct').checked = true)">
+              <label for="q3-3">a</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q3-4" name="quiz3" class="incorrect">
+              <label for="q3-4">hyper</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quiz 4 -->
+        <div class="quiz quiz-4">
+          <h3>Question 4: Which CSS property is used to add space between elements?</h3>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="q4-1" name="quiz4" class="incorrect">
+              <label for="q4-1">space</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q4-2" name="quiz4" class="correct" onchange="this.checked && (document.getElementById('quiz4-correct').checked = true)">
+              <label for="q4-2">margin</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q4-3" name="quiz4" class="incorrect">
+              <label for="q4-3">padding</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q4-4" name="quiz4" class="incorrect">
+              <label for="q4-4">gap</label>
+              <div class="feedback feedback-correct">Correct! Continue to the next question.</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quiz 5 -->
+        <div class="quiz quiz-5">
+          <h3>Question 5: Which HTML tag is used to define an unordered list?</h3>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="q5-1" name="quiz5" class="correct" onchange="this.checked && (document.getElementById('quiz5-correct').checked = true)">
+              <label for="q5-1">ul</label>
+              <div class="feedback feedback-correct">Correct! You've completed all questions!</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q5-2" name="quiz5" class="incorrect">
+              <label for="q5-2">ol</label>
+              <div class="feedback feedback-correct">Correct! You've completed all questions!</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q5-3" name="quiz5" class="incorrect">
+              <label for="q5-3">li</label>
+              <div class="feedback feedback-correct">Correct! You've completed all questions!</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+            <div class="option">
+              <input type="radio" id="q5-4" name="quiz5" class="incorrect">
+              <label for="q5-4">list</label>
+              <div class="feedback feedback-correct">Correct! You've completed all questions!</div>
+              <div class="feedback feedback-incorrect">Try again!</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Completion message -->
+        <div id="quiz-complete">
+          <h2>🎉 Congratulations!</h2>
+          <p>You've completed all the quizzes successfully!</p>
+        </div>
+      </div>
+    </div>
+
+      <footer id="footer" class="footer">
+        <div class="footer-container">
+          <div class="footer-row">
+            <!-- Contact Info -->
+            <div class="footer-column">
+              <h3>Contact Us</h3>
+              <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+              <p><i class="fas fa-envelope"></i> support@example.com</p>
+              <p><i class="fas fa-map-marker-alt"></i> 1234 Street, City, State, Zip</p>
+            </div>
+            
+            <!-- Quick Links -->
+            <div class="footer-column">
+              <h3>Quick Links</h3>
+              <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Terms of Service</a></li>
+              </ul>
+            </div>
+    
+            <!-- Newsletter Signup -->
+            <div class="footer-column">
+              <h3>Stay Connected</h3>
+              <p>Sign up for our newsletter</p>
+              <form action="#" class="footer-form">
+                <input type="email" placeholder="Enter your email" required>
+              </form>
+              <button type="submit">Subscribe</button>
+
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p>&copy; 2024 Your Company. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+  </body>
+</html>
